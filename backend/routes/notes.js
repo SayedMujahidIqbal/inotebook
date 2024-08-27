@@ -41,7 +41,7 @@ router.post('/addnote', fetchUser,
         }
     })
 
-// ROUTE 3: Update Existing note using: POST /api/notes/udpatenote. Login Required
+// ROUTE 3: Update Existing note using: PUT /api/notes/udpatenote/:id. Login Required
 router.put('/updatenote/:id', fetchUser, async (req, res) => {
 
     try {
@@ -56,6 +56,7 @@ router.put('/updatenote/:id', fetchUser, async (req, res) => {
         let note = await Notes.findById(req.params.id);
         if(!note){ return res.status(404).send ("Not Found") }
 
+        // Allow Updation only if user owns this Note
         if(note.user.toString() !== req.user.id){
             return res.status(401).send("Not Allowed");
         }
@@ -69,7 +70,28 @@ router.put('/updatenote/:id', fetchUser, async (req, res) => {
     }
 })
 
+// ROUTE 4: Delete a note using: Delete /api/notes/deletenote/:id. Login Required
+router.delete('/deletenote/:id', fetchUser, async (req, res) => {
+    try {
+        const{ title, description, tag } = req.body;  
+        
+         //Find the note to be deleted and delete it
+         let note = await Notes.findById(req.params.id);
+         if(!note){ return res.status(404).send ("Not Found") }
 
+         // Allow Deletion only if user owns this Note
+        if(note.user.toString() !== req.user.id){
+            return res.status(401).send("Not Allowed");
+        }
+
+        note = await Notes.findByIdAndDelete(req.params.id)
+        res.json({ "Success": "Note has been deleted", note: note })
+
+    } catch (error) {   
+        console.log(error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
 
 
 module.exports = router
