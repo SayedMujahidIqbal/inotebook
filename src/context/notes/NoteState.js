@@ -35,7 +35,6 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({title, description, tag})
     });
-    console.log(response.json());
   }
   // Delete a Note
   const deleteNote = async (id) => {
@@ -46,12 +45,10 @@ const NoteState = (props) => {
         "auth-token": authToken
       },
     });
-    console.log(response.json());
   }
   // Edit a Note
   const editNote = async (id, title, description, tag) => {
     //API Call
-
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
@@ -60,8 +57,20 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag })
     });
-    const json = response.json();
-    console.log(json);
+    const json = await response.json();
+
+    let newNotes = JSON.parse(JSON.stringify(notes));
+
+    for (let index = 0; index < notes.length; index++) {
+      const element = newNotes[index];
+      if(element._id === id){
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
+      }
+    }
+    setNotes(newNotes);
   }
   return (
     <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, getNotes }}>
