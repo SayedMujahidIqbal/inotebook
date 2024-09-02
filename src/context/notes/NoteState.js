@@ -35,6 +35,8 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({title, description, tag})
     });
+    const note = await response.json();
+    setNotes(notes.concat(note))
   }
   // Delete a Note
   const deleteNote = async (id) => {
@@ -45,6 +47,8 @@ const NoteState = (props) => {
         "auth-token": authToken
       },
     });
+    const newNotes = notes.filter((note) => note._id !== id)
+    setNotes(newNotes)
   }
   // Edit a Note
   const editNote = async (id, title, description, tag) => {
