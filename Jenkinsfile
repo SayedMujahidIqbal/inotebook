@@ -13,7 +13,9 @@ pipeline{
             }
             stage('test'){
                 steps {
-                    bat "node --version"
+                    script{
+                        bat "node --version"
+                    }
                 }
             }
         }
