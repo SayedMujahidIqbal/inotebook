@@ -21,9 +21,7 @@ pipeline{
             stage('Deliver') {
                 steps {
                     script{
-                        sh './jenkins/scripts/deliver.bat'
-                        input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                        sh './jenkins/scripts/kill.bat'
+                        bat 'node --version'
                     }
                 }
             }
