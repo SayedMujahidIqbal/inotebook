@@ -18,5 +18,14 @@ pipeline{
                     }
                 }
             }
+            stage('Deliver') {
+                steps {
+                    script{
+                        bat './jenkins/scripts/deliver.bat'
+                        input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                        bat './jenkins/scripts/kill.bat'
+                    }
+                }
+            }
         }
 }
